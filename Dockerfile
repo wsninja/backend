@@ -1,4 +1,4 @@
-FROM node:16 AS builder
+FROM node:16.15.0-alpine3.15 AS builder
 
 RUN apk update
 RUN apk add --no-cache sqlite
