@@ -48,5 +48,5 @@ jobs:
           echo STOPPING PREVIOUS DOCKER INSTANCE
           docker stop wsninja-backend
           echo RUNNING NEW DOCKER INSTANCE
-          docker run --rm -p 8000:80 --name wsninja-backend -d jakubblockczech/ws-ninja-backend
+          docker run --rm -p 80:8000 --name wsninja-backend -d jakubblockczech/ws-ninja-backend
           '
