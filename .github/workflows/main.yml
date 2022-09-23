@@ -46,7 +46,7 @@ jobs:
       run: |
         ls
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        scp -i private_key docker-compose.yml ${USER_NAME}@${HOSTNAME}:
+        scp -o StrictHostKeyChecking=no -i private_key docker-compose.yml ${USER_NAME}@${HOSTNAME}:
     - name: Run docker image on the server
       env:
         PRIVATE_KEY: ${{ secrets.SSH_KEY  }}
