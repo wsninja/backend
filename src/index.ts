@@ -18,26 +18,26 @@ import { HttpError } from 'utils/httpError';
 
 const main = async () => {
 	try {
-		//initTokenCache();
-		//initSwapTokenCache();
+		initTokenCache();
+		initSwapTokenCache();
 
 		const app = express(); // Setup app
 
-		//app.use(helmet());
-		//app.use(morgan(':date[iso] :method :url :status :response-time ms - :res[content-length] - :remote-addr')); // For logs
-		//app.use(cors());
+		app.use(helmet());
+		app.use(morgan(':date[iso] :method :url :status :response-time ms - :res[content-length] - :remote-addr')); // For logs
+		app.use(cors());
 
 		app.use(bodyParser.urlencoded({ extended: false })); // Body Parser
 		app.use(bodyParser.json());
 
 		//Initialize routes
-		//app.use('/api/swap', swapRouter);
-		//app.use('/api/token', tokenRouter);
-		//app.use('/api/wallet', walletRouter);
-		//app.use('/api/user', userRouter);
-		//app.use('/api/notification', notificationRouter);
-		//app.use('/api/bitcoin', bitcoinRouter);
-		//app.use('/api/maintenance', maintenanceRouter);
+		app.use('/api/swap', swapRouter);
+		app.use('/api/token', tokenRouter);
+		app.use('/api/wallet', walletRouter);
+		app.use('/api/user', userRouter);
+		app.use('/api/notification', notificationRouter);
+		app.use('/api/bitcoin', bitcoinRouter);
+		app.use('/api/maintenance', maintenanceRouter);
 
 		// Error handling
 		app.use((req, res, next) => {
