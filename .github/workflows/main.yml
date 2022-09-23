@@ -30,14 +30,21 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build and push
+    - name: Build nginx
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: jakubblockczech/ws-ninja-backend:latest
+        tags: jakubblockczech/nginx:latest
+        context: nginx/.
+    - name: Build node backend
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: jakubblockczech/test:latest
+        context: .
     - name: Move docker-compose.yml to server
-      uses: actions/checkout@v3
       run: |
+        ls
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         scp -i private_key docker-compose.yml ${USER_NAME}@${HOSTNAME}:
     - name: Run docker image on the server
