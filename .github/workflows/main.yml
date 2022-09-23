@@ -43,8 +43,11 @@ jobs:
         tags: jakubblockczech/test:latest
         context: .
     - name: Move docker-compose.yml to server
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_KEY  }}
+        HOSTNAME: ${{ secrets.SSH_HOST  }}
+        USER_NAME: ${{ secrets.SSH_USERNAME  }}
       run: |
-        ls
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         scp -o StrictHostKeyChecking=no -i private_key docker-compose.yml ${USER_NAME}@${HOSTNAME}:
     - name: Run docker image on the server
