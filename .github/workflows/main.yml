@@ -35,6 +35,11 @@ jobs:
       with:
         push: true
         tags: jakubblockczech/ws-ninja-backend:latest
+    - name: Move docker-compose.yml to server
+      uses: actions/checkout@v3
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        scp -i private_key docker-compose.yml ${USER_NAME}@${HOSTNAME}:
     - name: Run docker image on the server
       env:
         PRIVATE_KEY: ${{ secrets.SSH_KEY  }}
@@ -43,10 +48,12 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-          echo PULLING DOCKER IMAGE
-          docker pull jakubblockczech/ws-ninja-backend:latest
-          echo STOPPING PREVIOUS DOCKER INSTANCE
-          docker stop wsninja-backend
+          echo PULLING DOCKER IMAGE NGINX
+          docker pull jakubblockczech/nginx
+          echo PULLING DOCKER IMAGE NODE APP
+          docker pull jakubblockczech/test
+          echo STOPPING PREVIOUS DOCKER CONTAINERS
+          docker-compose down
           echo RUNNING NEW DOCKER INSTANCE
-          docker run --rm -p 80:8000 --name wsninja-backend -d jakubblockczech/ws-ninja-backend
+          docker-compose up -d
           '
