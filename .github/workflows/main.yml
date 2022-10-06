@@ -50,6 +50,25 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         scp -o StrictHostKeyChecking=no -i private_key docker-compose.yml ${USER_NAME}@${HOSTNAME}:
+    - name: Create directory for source code on the server
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_KEY  }}
+        HOSTNAME: ${{ secrets.SSH_HOST  }}
+        USER_NAME: ${{ secrets.SSH_USERNAME  }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            [ -d "/opt/app/" ] && rm -rf /opt/app/ || echo 0
+            mkdir /opt/app/
+        '
+    - name: Copy src to server
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_KEY  }}
+        HOSTNAME: ${{ secrets.SSH_HOST  }}
+        USER_NAME: ${{ secrets.SSH_USERNAME  }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        scp -r -o StrictHostKeyChecking=no -i private_key ${GITHUB_WORKSPACE}/* ${USER_NAME}@${HOSTNAME}:/opt/app/
     - name: Run docker image on the server
       env:
         PRIVATE_KEY: ${{ secrets.SSH_KEY  }}
